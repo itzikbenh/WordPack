@@ -10,7 +10,7 @@ const config = {
 		app: './assets/src/js/app.js',
 	},
 	output: {
-		filename: '/js/[name].js',
+		filename: 'js/[name].js',
 		path: path.resolve(__dirname, 'public'),
 	},
 	module: {
@@ -27,7 +27,7 @@ const config = {
 				exclude: /(node_modules|bower_components)/,
 				loader: 'babel-loader',
 				query: {
-					presets: ['es2015']
+					presets: ['@babel/preset-env']
 				}
 			}
 		]
@@ -56,12 +56,13 @@ const config = {
 	]
 };
 
-//If true JS and CSS files will be minified
-if (process.env.NODE_ENV === 'production') {
-	config.plugins.push(
-		new UglifyJSPlugin(),
-		new OptimizeCssAssetsPlugin()
-	);
-}
+module.exports = (env, argv) => {
+	if (argv.mode === 'production') { //If true JS and CSS files will be minified
+		config.plugins.push(
+			new UglifyJSPlugin(),
+			new OptimizeCssAssetsPlugin()
+		);
+	}
 
-module.exports = config;
+	return config;
+};
